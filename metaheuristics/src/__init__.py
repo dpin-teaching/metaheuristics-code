@@ -1,1 +1,1 @@
-from .search import *
+from .slidingtile_search import *
