@@ -79,10 +79,10 @@ class Node:
     parent: Node
     cost: float
 
-    # def __lt__(self, other):
-    #     if not isinstance(other, Node):
-    #         return False
-    #     return self.cost < other.cost
+    def __lt__(self, other):
+        if not isinstance(other, Node):
+            return False
+        return self.cost < other.cost
 
 
     def expand(self, problem: Problem):
@@ -97,7 +97,32 @@ class Node:
                              )
             yield next_node
 
-
 from queue import PriorityQueue
 def best_first_search(problem: Problem):
-    pas
+    frontier = PriorityQueue()
+    reached = dict()
+    state_initial = problem.state_initial
+    node = Node(state=state_initial,
+                parent=None,
+                action=None,
+                cost=0
+    )
+    frontier.put(node)
+    def is_lower_cost(child, reached):
+        state_child = child.state
+        if child.cost < reached[state_child].cost:
+            print("USEFUL")
+            return True
+        return False
+    
+    while not frontier.empty():
+        node: Node
+        node = frontier.get()
+        if problem.is_goal(node.state):
+            return node
+        for child in node.expand(problem):
+            state_child = child.state
+            if state_child not in reached or is_lower_cost(child, reached):
+                reached[state_child] = child
+                frontier.put(child)
+    return None
